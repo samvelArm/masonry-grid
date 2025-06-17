@@ -1,8 +1,14 @@
 # Masonary Grid task
 
+This is a demo project.
+
+To Run this project you'll need to have PEXELS_API_KEY. (You can get one using https://www.pexels.com/)
+
 ## Available Scripts
 
 In the project directory, you can run:
+
+### export PEXELS_API_KEY=<PEXELS_API_KEY>
 
 ### `npm start`
 
