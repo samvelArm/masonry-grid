@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes } from 'react-router';
 import Grid from './pages/Grid';
 import DetailedView from './pages/DetailedView';
