@@ -1,42 +1,48 @@
-import { useCallback, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
-import { fetchPexelsPhotos } from '../services/pexels';
+import MasonryGrid from './MasonryGrid';
+import { useSearch } from '../../hooks/useSearch';
+import { Search } from '../../components/Search';
 
 interface GridProps {
   // Define any props if needed
 }
 
 const Grid = (props: GridProps) => {
-  const getPexelsPhotos = useCallback(async () => {
-    fetchPexelsPhotos({ query: 'nature', per_page: 10 })
-      .then((photos) => {
-        console.log('Fetched photos:', photos);
-      })
-      .catch((error) => {
-        console.error('Error fetching photos:', error);
-      });
-  }, []);
-
-  useEffect(() => {
-    getPexelsPhotos();
-  }, [getPexelsPhotos]);
+  const [query, setQuery] = useState<string>('');
+  const { items, loading, error } = useSearch({ query });
 
   return (
     <Wrapper>
-      <h1>Grid Page</h1>
-      <p>This is the grid page content.</p>
+      <SearchWrapper>
+        <Search query={query} onChange={setQuery} />
+      </SearchWrapper>
+      <MasonryGrid items={items} isLoading={loading} error={error} />
     </Wrapper>
   );
 };
 
+const SearchWrapper = styled.div`
+  position: sticky;
+  top: 36px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding: 8px;
+  background-color: #f0f0f0;
+  z-index: 1;
+`;
+
 const Wrapper = styled.div`
+  margin: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f0f0f0;
-  color: red;
+  justify-content: flex-start;
+  box-sizing: border-box;
 `;
 
 export default Grid;
