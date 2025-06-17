@@ -4,11 +4,9 @@ This is a demo project.
 
 To Run this project you'll need to have PEXELS_API_KEY. (You can get one using https://www.pexels.com/)
 
+set in .env file REACT_APP_PEXELS_API_KEY=
+
 ## Available Scripts
-
-In the project directory, you can run:
-
-### export PEXELS_API_KEY=<PEXELS_API_KEY>
 
 ### `npm start`
 
