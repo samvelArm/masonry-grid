@@ -1,6 +1,5 @@
-const PEXELS_API_KEY = process.env.PEXELS_API_KEY || '';
+const PEXELS_API_KEY = process.env.REACT_APP_PEXELS_API_KEY || '';
 const PEXELS_API_URL = 'https://api.pexels.com/v1/';
-
 export interface PexelsPhotoSrc {
   original: string;
   large2x: string;
@@ -40,12 +39,17 @@ export interface PexelsSearchRequestParams {
   color?: string;
   locale?: string;
   page?: number;
-  per_page?: number;
+  perPage?: number;
 }
 
 export const fetchPexelsPhotos = async (params: PexelsSearchRequestParams) => {
+  if (!PEXELS_API_KEY) {
+    throw new Error('Pexels API key is not set');
+  }
   const response = await fetch(
-    `${PEXELS_API_URL}search?query=${params.query}&page=${params.page}&per_page=${params.per_page}`,
+    `${PEXELS_API_URL}search?query=${encodeURIComponent(
+      params.query.trim() || 'cats'
+    )}&page=${params.page}&per_page=${params.perPage}&orientation=landscape`,
     {
       headers: {
         Authorization: PEXELS_API_KEY,
