@@ -15,11 +15,7 @@ export const useSearch = ({ query }: SearchProps) => {
     setLoading(true);
     fetchPexelsPhotos({ perPage: 100, page, query })
       .then((photos) => {
-        if (photos && photos.length > 0) {
-          setItems(photos);
-        } else {
-          setItems([]);
-        }
+        setItems((items) => [...items, ...photos]);
       })
       .catch((error) => {
         setError(`Error fetching photos: ${error.message}`);
@@ -30,7 +26,27 @@ export const useSearch = ({ query }: SearchProps) => {
   }, [query, page]);
 
   useEffect(() => {
+    setItems([]); // Reset items when query changes
+    setPage(1); // Reset page when query changes
+    setError(null); // Reset error when query changes
+  }, [query]);
+
+  useEffect(() => {
     getPexelsPhotos();
+
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [getPexelsPhotos]);
 
   return { items, loading, error };

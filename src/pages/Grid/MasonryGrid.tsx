@@ -16,19 +16,22 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
   error,
 }) => {
   return (
-    <GridContainer>
-      {error ? (
-        <NoResults>{error}</NoResults>
-      ) : isLoading ? (
-        <LoadingSpinner />
-      ) : items.length === 0 ? (
-        <NoResults>No results found</NoResults>
-      ) : (
-        items.map((item) => <GridItem key={item.id} {...item} />)
-      )}
-    </GridContainer>
+    <Wrapper>
+      <GridContainer>
+        {!isLoading && (error || items.length === 0) ? (
+          <NoResults>{error || 'No results found'}</NoResults>
+        ) : (
+          items.map((item) => <GridItem key={item.id} {...item} />)
+        )}
+      </GridContainer>
+      {isLoading && <LoadingSpinner />}
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  min-height: calc(100vh - 81px);
+`;
 
 const GridContainer = styled.div`
   padding: 16px;
