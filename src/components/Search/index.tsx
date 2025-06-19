@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { LoadingSpinner } from '../LoadingSpinner';
 
 export interface SearchProps {
   query: string;
+  loading: boolean;
   onChange: (query: string) => void;
 }
 
-export const Search: React.FC<SearchProps> = ({ query, onChange }) => {
+export const Search: React.FC<SearchProps> = ({ query, onChange, loading }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value;
     clearTimeout((handleChange as any).debounceTimeout);
@@ -16,12 +18,17 @@ export const Search: React.FC<SearchProps> = ({ query, onChange }) => {
   };
 
   return (
-    <Input
+    <Wrapper>
+      <Input
+      name="search"
       type="text"
       defaultValue={query}
       onChange={handleChange}
       placeholder="Search..."
+      disabled={loading}
     />
+      {loading && <LoadingSpinnerWrapper><LoadingSpinner /></LoadingSpinnerWrapper>}      
+    </Wrapper>
   );
 };
 
@@ -51,4 +58,17 @@ const Input = styled.input`
     border-color: #90caf9;
     background-color: #ffffff;
   }
+`;
+
+const Wrapper = styled.div`
+  position: relative;
+`;
+
+const LoadingSpinnerWrapper = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
 `;

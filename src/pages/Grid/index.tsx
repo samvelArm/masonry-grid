@@ -3,21 +3,15 @@ import styled from 'styled-components';
 import MasonryGrid from './MasonryGrid';
 import { useSearch } from '../../hooks/useSearch';
 import { Search } from '../../components/Search';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
 
-interface GridProps {
-  // Define any props if needed
-}
-
-const Grid = (props: GridProps) => {
+const Grid = () => {
   const [query, setQuery] = useState<string>('');
   const { items, loading, error, maxY } = useSearch({ query });
 
   return (
     <Wrapper>
       <SearchWrapper>
-        {loading && <LoadingSpinner />}
-        <Search query={query} onChange={setQuery} />
+        <Search query={query} onChange={setQuery} loading={loading}/>
       </SearchWrapper>
       <MasonryGrid items={items} isLoading={loading} error={error} maxY={maxY} />
     </Wrapper>
@@ -27,9 +21,9 @@ const Grid = (props: GridProps) => {
 const SearchWrapper = styled.div`
   position: sticky;
   top: 36px;
-  width: 100%;
+  width: 100vw;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   box-sizing: border-box;
   padding: 8px;

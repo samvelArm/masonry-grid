@@ -40,6 +40,9 @@ const HeaderStyled = styled.header`
 const Title = styled.h1`
   font-size: 1.5rem;
   margin: 0 0 0 4px;
+  @media (max-width: 400px) {
+    margin: auto;
+  }
 `;
 
 const Link = styled.a`

@@ -11,7 +11,7 @@ function App() {
   return (
     <Wrapper>
       <Header />
-      <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<Loader><LoadingSpinner /></Loader>}>
         <Routes>
           <Route path="/" element={<Grid />} />
           <Route path="/:id" element={<DetailedView />} />
@@ -22,6 +22,17 @@ function App() {
 }
 
 export default App;
+
+const Loader = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Wrapper = styled.div`
   text-align: center;
