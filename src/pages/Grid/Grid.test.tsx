@@ -1,6 +1,5 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import Grid from './index';
+import Grid from './Grid';
 
 jest.mock('../../hooks/useSearch', () => ({
   useSearch: jest.fn(),

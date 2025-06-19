@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import DetailedView from './index';
+import DetailedView from './DetailedView';
 
 jest.mock('react-router', () => ({
   Link: ({ to, children, ...props }: any) => (

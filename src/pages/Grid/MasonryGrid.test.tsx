@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import MasonryGrid from './MasonryGrid';
 import { ItemsVitualized } from '../../hooks/useSearch';
 
-// Mock the GridItem component
 jest.mock('./GridItem', () => {
   return function MockGridItem(props: any) {
     return <div data-testid={`grid-item-${props.id}`}>Grid Item {props.id}</div>;
