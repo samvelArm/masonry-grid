@@ -49,7 +49,7 @@ export const fetchPexelsPhotos = async (params: PexelsSearchRequestParams) => {
   const response = await fetch(
     `${PEXELS_API_URL}search?query=${encodeURIComponent(
       params.query.trim() || 'cats'
-    )}&page=${params.page}&per_page=${params.perPage}&orientation=portrait`,
+    )}&page=${params.page}&per_page=${params.perPage}`,
     {
       headers: {
         Authorization: PEXELS_API_KEY,

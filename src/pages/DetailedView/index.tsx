@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { fetchPexelsPhotoById, PexelsPhoto } from "../services/pexels";
 import styled from "styled-components";
 import { LoadingSpinner } from "../../components/LoadingSpinner";
@@ -9,7 +9,6 @@ const DetailedView = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState<boolean>(true);
-  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -27,12 +26,12 @@ const DetailedView = () => {
 
   return (
     <Wrapper>
-      <BackButton onClick={() => navigate(-1)}>
+      <BackButton to="/">
         <ArrowLeftIcon />
       </BackButton>
       {loading && <LoadingSpinner />}
       {error && <p>Error: {error}</p>}
-      {!loading && image && <ImageWrapper bgColor={image.avg_color} aspectRatio={image.width / image.height} height={image.height} href={image.url} target="_blank" rel="noopener noreferrer">
+      {!loading && image && <ImageWrapper bgColor={image.avg_color} aspectRatio={image.width / image.height} href={image.url} target="_blank" rel="noopener noreferrer">
         <Image src={image.src.original} alt={image.alt} onLoad={() => setImageLoading(false)} imageLoading={imageLoading} />
       </ImageWrapper>}
       <PhotoMeta>
@@ -50,7 +49,7 @@ const Wrapper = styled.div`
   height: calc(100vh - 36px);
 `;
 
-const BackButton = styled.button`
+const BackButton = styled(Link)`
   position: absolute;
   top: 50px;
   left: 10px;
@@ -62,10 +61,9 @@ const BackButton = styled.button`
   align-items: center;
 `;
 
-const ImageWrapper = styled.a<{ bgColor: string, aspectRatio: number, height: number }>`
+const ImageWrapper = styled.a<{ bgColor: string, aspectRatio: number }>`
   max-height: 60vh;
   max-width: 80vw;
-  height: ${({ height }) => height}px;
   background-color: ${({ bgColor }) => bgColor};
   aspect-ratio: ${({ aspectRatio }) => aspectRatio};
   border-radius: 10px;
@@ -73,8 +71,8 @@ const ImageWrapper = styled.a<{ bgColor: string, aspectRatio: number, height: nu
 
 const Image = styled.img<{ imageLoading: boolean }>`
   height: 100%;
-  width: 100%;
   object-fit: contain;
+  max-width: 100%;
   border-radius: 10px;
   opacity: ${({ imageLoading }) => imageLoading ? 0 : 1};
   transition: opacity 0.3s ease-in-out;
