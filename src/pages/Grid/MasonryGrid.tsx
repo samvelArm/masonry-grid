@@ -18,7 +18,7 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
 }) => {
   return (
     <Wrapper>
-      <GridContainer height={maxY}>
+      <GridContainer height={maxY} data-testid="grid-container">
         {!isLoading && (error || items.size === 0) ? (
           <NoResults>{error || 'No results found'}</NoResults>
         ) : (

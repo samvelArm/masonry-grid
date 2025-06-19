@@ -15,7 +15,6 @@ const DetailedView = () => {
     if (!id) return;
     setLoading(true);
     fetchPexelsPhotoById(Number(id)).then((data) => {
-      console.log(data);
       setImage(data);
     }).catch((error) => {
       setError(error.message);
@@ -61,7 +60,9 @@ const BackButton = styled(Link)`
   align-items: center;
 `;
 
-const ImageWrapper = styled.a<{ bgColor: string, aspectRatio: number }>`
+const ImageWrapper = styled.a.withConfig({
+  shouldForwardProp: (prop) => !['bgColor', 'aspectRatio'].includes(prop),
+})<{ bgColor: string, aspectRatio: number }>`
   max-height: 60vh;
   max-width: 80vw;
   background-color: ${({ bgColor }) => bgColor};
@@ -69,7 +70,9 @@ const ImageWrapper = styled.a<{ bgColor: string, aspectRatio: number }>`
   border-radius: 10px;
 `;
 
-const Image = styled.img<{ imageLoading: boolean }>`
+const Image = styled.img.withConfig({
+  shouldForwardProp: (prop) => !['imageLoading'].includes(prop),
+})<{ imageLoading: boolean }>`
   height: 100%;
   object-fit: contain;
   max-width: 100%;

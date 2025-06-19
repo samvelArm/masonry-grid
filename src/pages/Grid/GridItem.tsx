@@ -22,6 +22,7 @@ const GridItem: React.FC<GridItemProps> = ({
 
   return (
     <GridItemContainer
+      data-testid="grid-item-container"
       isLoading={isLoading}
       aspectRatio={width / height}
       bgColor={avg_color}
@@ -30,18 +31,20 @@ const GridItem: React.FC<GridItemProps> = ({
       width={width}
     >
       <Link to={`/${id}`}>
-      <GridItemImage
-        isLoading={isLoading}
-        src={src.medium}
-        alt={alt}
-        onLoad={() => setIsLoading(false)}
-      />
+        <GridItemImage
+          isLoading={isLoading}
+          src={src.medium}
+          alt={alt}
+          onLoad={() => setIsLoading(false)}
+        />
       </Link>
     </GridItemContainer>
   );
 };
 
-const GridItemContainer = styled.div<{
+const GridItemContainer = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['isLoading', 'aspectRatio', 'bgColor', 'x', 'y', 'width'].includes(prop),
+})<{
   isLoading: boolean;
   aspectRatio: number;
   bgColor: string;
@@ -61,7 +64,9 @@ const GridItemContainer = styled.div<{
     isLoading ? bgColor : 'transparent'};
 `;
 
-const GridItemImage = styled.img<{ isLoading: boolean }>`
+const GridItemImage = styled.img.withConfig({
+  shouldForwardProp: (prop) => !['isLoading'].includes(prop),
+})<{ isLoading: boolean }>`
   display: block;
   width: 100%;
   opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
