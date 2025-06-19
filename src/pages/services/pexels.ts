@@ -29,7 +29,7 @@ export interface PexelsSearchResponse {
   per_page: number;
   photos: PexelsPhoto[];
   total_results: number;
-  total_pages: number;
+  next_page: string;
 }
 
 export interface PexelsSearchRequestParams {
@@ -61,8 +61,8 @@ export const fetchPexelsPhotos = async (params: PexelsSearchRequestParams) => {
     throw new Error('Failed to fetch photos from Pexels');
   }
 
-  const data = await response.json();
-  return data.photos;
+  const data: PexelsSearchResponse = await response.json();
+  return data;
 };
 
 export const fetchPexelsPhotoById = async (id: number) => {

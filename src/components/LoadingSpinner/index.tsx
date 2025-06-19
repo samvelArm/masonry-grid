@@ -10,8 +10,8 @@ export const LoadingSpinner = styled.div`
   background-color: transparent;
   &::after {
     content: '';
-    border: 2px solid #ccc;
-    border-top-color: #3498db;
+    border: 2px solid #e3f2fd;
+    border-top-color: #42a5f5;
     border-radius: 50%;
     width: 16px;
     height: 16px;

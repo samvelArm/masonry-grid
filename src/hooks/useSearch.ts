@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { fetchPexelsPhotos, PexelsPhoto } from '../pages/services/pexels';
-import { getNextIndex, throttle } from '../utils';
+import { getNextIndex } from '../utils';
 import { COLUMN_GAP, COLUMN_WIDTH } from '../constants';
+import { useResize } from './useResize';
+import { useScroll } from './useScroll';
 
 export interface SearchProps {
   query: string;
@@ -23,24 +25,29 @@ export interface SearchResult {
 
 export const useSearch = ({ query }: SearchProps): SearchResult => {
   const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<Map<number, PexelsPhoto>>(
     new Map<number, PexelsPhoto>()
   );
-  const [columns, setColumns] = useState<number>(1);
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [scrollPosition, setScrollPosition] = useState<number>(0);
+  const [moreItems, setMoreItems] = useState<boolean>(true);
+  const { scrollPosition } = useScroll({ setPage });
+  const { columns, windowWidth } = useResize();
 
   const getPexelsPhotos = useCallback(() => {
+    if (!moreItems) {
+      return;
+    }
     setLoading(true);
-    fetchPexelsPhotos({ perPage: 20, page, query })
-      .then((photos) => {
+    
+    fetchPexelsPhotos({ perPage: 40, page, query })
+      .then(({photos, next_page: nextPage}) => {
         setItems((items) => {
           const newItems = new Map(items);
           photos.forEach((photo: PexelsPhoto) => newItems.set(photo.id, photo));
           return newItems;
         });
+        setMoreItems(!!nextPage);
       })
       .catch((error) => {
         setError(`Error fetching photos: ${error.message}`);
@@ -48,41 +55,7 @@ export const useSearch = ({ query }: SearchProps): SearchResult => {
       .finally(() => {
         setLoading(false);
       });
-  }, [query, page]);
-
-  useEffect(() => {
-    setItems(new Map<number, PexelsPhoto>());
-    setPage(1);
-    setError(null);
-  }, [query]);
-
-  useEffect(() => {
-    getPexelsPhotos();
-
-    const handleScroll = throttle(() => {
-      setScrollPosition(window.scrollY);
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 100
-      ) {
-        setPage((prevPage) => prevPage + 1);
-      }
-    }, 100);
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [getPexelsPhotos]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setColumns(Math.floor(window.innerWidth / (COLUMN_WIDTH + COLUMN_GAP)));
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [query, page, moreItems]);
 
   const calculatePlacment = useMemo(() => {
     
@@ -91,7 +64,7 @@ export const useSearch = ({ query }: SearchProps): SearchResult => {
     const vitualizedItems = new Map(
       Array.from(items.entries()).map(([id, photo]) => {
         const {minCol, minY} = getNextIndex(yMap, columns);
-        const xOffset = (window.innerWidth - columns * COLUMN_WIDTH - COLUMN_GAP * (columns - 1)) / 2;
+        const xOffset = (windowWidth - columns * COLUMN_WIDTH - COLUMN_GAP * (columns - 1)) / 2;
         const x = minCol * (COLUMN_WIDTH + COLUMN_GAP) + xOffset;
         const width = COLUMN_WIDTH;
         const height = photo.height * (width / photo.width);
@@ -112,7 +85,7 @@ export const useSearch = ({ query }: SearchProps): SearchResult => {
     const maxY = Math.max(...Array.from(yMap.values()));
 
     return {vitualizedItems, maxY};
-  }, [items, columns]);
+  }, [items, columns, windowWidth]);
 
   // Virtualization logic
   const visibleItems = useMemo(() => {
@@ -134,6 +107,17 @@ export const useSearch = ({ query }: SearchProps): SearchResult => {
     
     return visible;
   }, [calculatePlacment.vitualizedItems, scrollPosition]);
+
+  useEffect(() => {
+    setItems(new Map<number, PexelsPhoto>());
+    setPage(1);
+    setMoreItems(true);
+    setError(null);
+  }, [query]);
+
+  useEffect(() => {
+    getPexelsPhotos();
+  }, [getPexelsPhotos]);
   
   return { 
     items: visibleItems, 

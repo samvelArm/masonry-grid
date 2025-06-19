@@ -18,7 +18,7 @@ const MasonryGrid: React.FC<MasonryGridProps> = ({
 }) => {
   return (
     <Wrapper>
-      <GridContainer maxY={maxY}>
+      <GridContainer height={maxY}>
         {!isLoading && (error || items.size === 0) ? (
           <NoResults>{error || 'No results found'}</NoResults>
         ) : (
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   min-height: calc(100vh - 81px);
 `;
 
-const GridContainer = styled.div<{ maxY: number }>`
+const GridContainer = styled.div<{ height: number }>`
   padding: 16px;
   height: fit-content;
   width: 100vw;
@@ -43,16 +43,14 @@ const GridContainer = styled.div<{ maxY: number }>`
   position: relative;
   box-sizing: border-box;
   overflow-y: auto;
-  height: ${({ maxY }) => maxY}px;
+  height: ${({ height }) => height}px;
 `;
 
 const NoResults = styled.div`
-  position: absolute;
-  inset: 0;
   display: flex;
+  justify-content: center;
+  flex: 1;
   align-items: center;
-  width: 100%;
-  height: 100%;
   color: #888;
   font-size: 1.2rem;
   text-wrap: nowrap;

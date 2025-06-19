@@ -16,7 +16,7 @@ const Grid = (props: GridProps) => {
   return (
     <Wrapper>
       <SearchWrapper>
-      {loading && <LoadingSpinner />}
+        {loading && <LoadingSpinner />}
         <Search query={query} onChange={setQuery} />
       </SearchWrapper>
       <MasonryGrid items={items} isLoading={loading} error={error} maxY={maxY} />

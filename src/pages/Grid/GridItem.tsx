@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { ItemsVitualized } from '../../hooks/useSearch';
+import { Link } from 'react-router';
 
 export interface GridItemProps extends ItemsVitualized {
   x: number;
@@ -8,6 +9,7 @@ export interface GridItemProps extends ItemsVitualized {
 }
 
 const GridItem: React.FC<GridItemProps> = ({
+  id,
   width,
   height,
   src,
@@ -27,12 +29,14 @@ const GridItem: React.FC<GridItemProps> = ({
       y={y}
       width={width}
     >
+      <Link to={`/${id}`}>
       <GridItemImage
         isLoading={isLoading}
         src={src.medium}
         alt={alt}
         onLoad={() => setIsLoading(false)}
       />
+      </Link>
     </GridItemContainer>
   );
 };
@@ -68,4 +72,4 @@ const GridItemImage = styled.img<{ isLoading: boolean }>`
   }
 `;
 
-export default GridItem;
+export default memo(GridItem);
