@@ -1,20 +1,20 @@
 import styled from 'styled-components';
 
 export const LoadingSpinner = styled.div`
-  width: 100%;
-  height: 100%;
-  margin: 16px;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: transparent;
   &::after {
     content: '';
-    border: 4px solid #ccc;
+    border: 2px solid #ccc;
     border-top-color: #3498db;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     animation: spin 1s linear infinite;
   }
 
