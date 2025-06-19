@@ -85,6 +85,7 @@ export const useSearch = ({ query }: SearchProps): SearchResult => {
   }, []);
 
   const calculatePlacment = useMemo(() => {
+    
     const yMap = new Map<number, number>(Array.from({ length: columns }, (_, index) => [index, 0]));    
 
     const vitualizedItems = new Map(
@@ -112,6 +113,32 @@ export const useSearch = ({ query }: SearchProps): SearchResult => {
 
     return {vitualizedItems, maxY};
   }, [items, columns]);
+
+  // Virtualization logic
+  const visibleItems = useMemo(() => {
+    const buffer = 500; // Buffer zone in pixels
+    const viewportTop = scrollPosition - buffer;
+    const viewportBottom = scrollPosition + window.innerHeight + buffer;
+    
+    const visible = new Map<number, ItemsVitualized>();
+    
+    calculatePlacment.vitualizedItems.forEach((item, id) => {
+      const itemTop = item.y;
+      const itemBottom = item.y + item.height;
+      
+      // Check if item is visible in viewport
+      if (itemBottom >= viewportTop && itemTop <= viewportBottom) {
+        visible.set(id, item);
+      }
+    });
+    
+    return visible;
+  }, [calculatePlacment.vitualizedItems, scrollPosition]);
   
-  return { items: calculatePlacment.vitualizedItems, maxY: calculatePlacment.maxY, loading, error };
+  return { 
+    items: visibleItems, 
+    maxY: calculatePlacment.maxY, 
+    loading, 
+    error 
+  };
 };
