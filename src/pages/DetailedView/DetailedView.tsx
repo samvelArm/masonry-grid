@@ -32,7 +32,7 @@ const DetailedView = () => {
       </BackButton>
       {loading && <LoadingSpinner />}
       {error && <p>Error: {error}</p>}
-      {!loading && image && <ImageWrapper bgColor={image.avg_color} aspectRatio={image.width / image.height} href={image.url} target="_blank" rel="noopener noreferrer">
+      {!loading && image && <ImageWrapper bgColor={image.avg_color} aspectRatio={image.width / image.height} height={image.height} width={image.width} href={image.url} target="_blank" rel="noopener noreferrer">
         <Image src={image.src.original} alt={image.alt} onLoad={() => setImageLoading(false)} imageLoading={imageLoading} />
       </ImageWrapper>}
       <PhotoMeta>
@@ -63,14 +63,16 @@ const BackButton = styled(Link)`
 `;
 
 const ImageWrapper = styled.a.withConfig({
-  shouldForwardProp: (prop) => !['bgColor', 'aspectRatio'].includes(prop),
-})<{ bgColor: string, aspectRatio: number }>`
+  shouldForwardProp: (prop) => !['bgColor', 'aspectRatio', 'height', 'width'].includes(prop),
+})<{ bgColor: string, aspectRatio: number, height: number, width: number }>`
   max-height: 60vh;
   max-width: 80vw;
   background-color: ${({ bgColor }) => bgColor};
   aspect-ratio: ${({ aspectRatio }) => aspectRatio};
   border-radius: 10px;
-`;
+  height: ${({ height }) => window.innerHeight < window.innerWidth ? `${height}px` : 'auto'};
+  width: ${({ width }) => window.innerHeight > window.innerWidth ? `${width}px` : 'auto'};
+  `;
 
 const Image = styled.img.withConfig({
   shouldForwardProp: (prop) => !['imageLoading'].includes(prop),
